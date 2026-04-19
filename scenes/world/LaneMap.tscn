@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3]
+
+[sub_resource type="BoxMesh" id="LaneMesh"]
+size = Vector3(10, 0.4, 85)
+
+[sub_resource type="BoxShape3D" id="LaneShape"]
+size = Vector3(10, 0.4, 85)
+
+[sub_resource type="BoxMesh" id="BorderMesh"]
+size = Vector3(1.0, 1.2, 85)
+
+[sub_resource type="StandardMaterial3D" id="LaneMat"]
+albedo_color = Color(0.25, 0.25, 0.25, 1)
+
+[sub_resource type="StandardMaterial3D" id="BorderMat"]
+albedo_color = Color(0.15, 0.15, 0.15, 1)
+
+[node name="LaneMap" type="Node3D"]
+position = Vector3(0, 0, 45)
+
+[node name="LaneBody" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LaneBody"]
+shape = SubResource("LaneShape")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="LaneBody"]
+mesh = SubResource("LaneMesh")
+material_override = SubResource("LaneMat")
+
+[node name="BorderLeft" type="MeshInstance3D" parent="."]
+position = Vector3(-5.5, 0.4, 0)
+mesh = SubResource("BorderMesh")
+material_override = SubResource("BorderMat")
+
+[node name="BorderRight" type="MeshInstance3D" parent="."]
+position = Vector3(5.5, 0.4, 0)
+mesh = SubResource("BorderMesh")
+material_override = SubResource("BorderMat")
+
+[node name="SpawnPoint" type="Marker3D" parent="."]
+position = Vector3(0, 0.4, 40)

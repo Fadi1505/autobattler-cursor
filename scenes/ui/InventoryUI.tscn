@@ -1,0 +1,37 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/InventoryUI.gd" id="1_inventory_script"]
+
+[node name="InventoryUI" type="Control"]
+offset_left = 380.0
+offset_right = 780.0
+offset_bottom = 420.0
+script = ExtResource("1_inventory_script")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Margin" type="MarginContainer" parent="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox" type="VBoxContainer" parent="Panel/Margin"]
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Panel/Margin/VBox"]
+text = "Inventory"
+
+[node name="Items" type="Label" parent="Panel/Margin/VBox"]
+text = "Inventory empty"
+autowrap_mode = 3
+size_flags_vertical = 3
+
+[node name="Close" type="Button" parent="Panel/Margin/VBox"]
+text = "Close"

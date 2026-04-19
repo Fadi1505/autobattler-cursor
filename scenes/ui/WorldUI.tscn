@@ -1,0 +1,205 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/WorldUI.gd" id="1_world_ui_script"]
+[ext_resource type="PackedScene" path="res://scenes/ui/ShopUI.tscn" id="2_shop_ui"]
+[ext_resource type="PackedScene" path="res://scenes/ui/InventoryUI.tscn" id="3_inventory_ui"]
+
+[sub_resource type="StyleBoxFlat" id="PanelStyle"]
+bg_color = Color(0.12, 0.12, 0.14, 0.85)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 12.0
+content_margin_top = 10.0
+content_margin_right = 12.0
+content_margin_bottom = 10.0
+
+[node name="WorldUI" type="CanvasLayer"]
+script = ExtResource("1_world_ui_script")
+layer = 1
+process_mode = 3
+unique_name_in_owner = true
+groups = ["world_ui"]
+
+[node name="Margin" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="HUD" type="VBoxContainer" parent="Margin"]
+layout_mode = 1
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 540.0
+offset_bottom = 110.0
+theme_override_constants/separation = 6
+
+[node name="Panel" type="Panel" parent="Margin/HUD"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("PanelStyle")
+
+[node name="PanelMargin" type="MarginContainer" parent="Margin/HUD/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox" type="VBoxContainer" parent="Margin/HUD/Panel/PanelMargin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="StatsRow" type="HBoxContainer" parent="Margin/HUD/Panel/PanelMargin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Level" type="Label" parent="Margin/HUD/Panel/PanelMargin/VBox/StatsRow"]
+layout_mode = 2
+text = "Lvl 1"
+
+[node name="XP" type="Label" parent="Margin/HUD/Panel/PanelMargin/VBox/StatsRow"]
+layout_mode = 2
+text = "XP: 0 / 100"
+
+[node name="Gold" type="Label" parent="Margin/HUD/Panel/PanelMargin/VBox/StatsRow"]
+layout_mode = 2
+text = "Gold: 0"
+
+[node name="Health" type="Label" parent="Margin/HUD/Panel/PanelMargin/VBox/StatsRow"]
+layout_mode = 2
+text = "HP: 100 / 100"
+
+[node name="Mana" type="Label" parent="Margin/HUD/Panel/PanelMargin/VBox/StatsRow"]
+layout_mode = 2
+text = "Mana: 60 / 60"
+
+[node name="TownHP" type="Label" parent="Margin/HUD/Panel/PanelMargin/VBox/StatsRow"]
+layout_mode = 2
+text = "Town: 400 / 400"
+
+[node name="WaveRow" type="HBoxContainer" parent="Margin/HUD/Panel/PanelMargin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Wave" type="Label" parent="Margin/HUD/Panel/PanelMargin/VBox/WaveRow"]
+layout_mode = 2
+text = "Wave 0"
+
+[node name="ControlsRow" type="HBoxContainer" parent="Margin/HUD/Panel/PanelMargin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="StartWave" type="Button" parent="Margin/HUD/Panel/PanelMargin/VBox/ControlsRow"]
+layout_mode = 2
+text = "Start Wave"
+
+[node name="Inventory" type="Button" parent="Margin/HUD/Panel/PanelMargin/VBox/ControlsRow"]
+layout_mode = 2
+text = "Inventory (I)"
+
+[node name="Controls" type="Button" parent="Margin/HUD/Panel/PanelMargin/VBox/ControlsRow"]
+layout_mode = 2
+text = "Controls"
+
+[node name="Status" type="Label" parent="Margin/HUD/Panel/PanelMargin/VBox"]
+layout_mode = 2
+text = "WASD move · LMB attack · Q skill · Tab lock · E shop · I inv"
+
+[node name="ShopUI" parent="." instance=ExtResource("2_shop_ui")]
+offset_left = 12.0
+offset_top = 90.0
+offset_right = 372.0
+offset_bottom = 470.0
+
+[node name="InventoryUI" parent="." instance=ExtResource("3_inventory_ui")]
+offset_left = 400.0
+offset_top = 90.0
+offset_right = 800.0
+offset_bottom = 510.0
+
+[node name="ControlsPanel" type="Panel" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -140.0
+offset_right = 180.0
+offset_bottom = 140.0
+
+[node name="Margin" type="MarginContainer" parent="ControlsPanel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="ControlsPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="ControlsPanel/Margin/VBox"]
+layout_mode = 2
+text = "Controls"
+
+[node name="Text" type="Label" parent="ControlsPanel/Margin/VBox"]
+layout_mode = 2
+text = "Move: W A S D
+Jump: Space
+Attack: Left mouse
+Skills: Q R F G (unlock with level)
+Lock target: Tab
+Interact: E
+Inventory: I
+Pause: Esc"
+autowrap_mode = 3
+
+[node name="Close" type="Button" parent="ControlsPanel/Margin/VBox"]
+layout_mode = 2
+text = "Close"
+
+[node name="RunOverPanel" type="Panel" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -100.0
+offset_right = 200.0
+offset_bottom = 100.0
+
+[node name="Margin" type="MarginContainer" parent="RunOverPanel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 24.0
+theme_override_constants/margin_top = 24.0
+theme_override_constants/margin_right = 24.0
+theme_override_constants/margin_bottom = 24.0
+
+[node name="VBox" type="VBoxContainer" parent="RunOverPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="RunOverTitle" type="Label" parent="RunOverPanel/Margin/VBox"]
+layout_mode = 2
+text = "Defeat"
+horizontal_alignment = 1
+
+[node name="RunOverRestart" type="Button" parent="RunOverPanel/Margin/VBox"]
+layout_mode = 2
+text = "Restart"

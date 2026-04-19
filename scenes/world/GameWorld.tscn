@@ -1,0 +1,59 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/GameWorld.gd" id="1_gameworld_script"]
+[ext_resource type="PackedScene" path="res://scenes/world/TownHub.tscn" id="2_town_hub"]
+[ext_resource type="PackedScene" path="res://scenes/world/LaneMap.tscn" id="3_lane_map"]
+[ext_resource type="PackedScene" path="res://scenes/player/Hero.tscn" id="4_hero"]
+[ext_resource type="PackedScene" path="res://scenes/ui/WorldUI.tscn" id="5_world_ui"]
+
+[sub_resource type="Environment" id="DefaultEnv"]
+background_mode = 1
+background_color = Color(0.45, 0.65, 0.85, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.35, 0.35, 0.4, 1)
+ambient_light_energy = 0.6
+tonemap_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="GrassMat"]
+albedo_color = Color(0.27, 0.45, 0.25, 1)
+
+[sub_resource type="BoxMesh" id="GroundMesh"]
+size = Vector3(160, 0.5, 160)
+
+[sub_resource type="BoxShape3D" id="GroundShape"]
+size = Vector3(160, 0.5, 160)
+
+[node name="GameWorld" type="Node3D"]
+script = ExtResource("1_gameworld_script")
+
+[node name="Ground" type="Node3D" parent="."]
+position = Vector3(0, -0.25, 40)
+
+[node name="Visual" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("GroundMesh")
+material_override = SubResource("GrassMat")
+
+[node name="Collision" type="StaticBody3D" parent="Ground"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/Collision"]
+shape = SubResource("GroundShape")
+
+[node name="TownHub" parent="." instance=ExtResource("2_town_hub")]
+
+[node name="LaneMap" parent="." instance=ExtResource("3_lane_map")]
+
+[node name="Hero" parent="." instance=ExtResource("4_hero")]
+position = Vector3(0, 0.2, 8)
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation = Vector3(-0.75, -0.4, 0.0)
+light_energy = 1.2
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("DefaultEnv")
+
+[node name="WaveStartTimer" type="Timer" parent="."]
+wait_time = 3.5
+one_shot = true
+
+[node name="WorldUI" parent="." instance=ExtResource("5_world_ui")]

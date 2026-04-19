@@ -1,0 +1,52 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/TownCore.gd" id="1_town_core_script"]
+[ext_resource type="Script" path="res://scripts/world/ShopTrigger.gd" id="2_shop_trigger_script"]
+
+[sub_resource type="BoxMesh" id="TownGroundMesh"]
+size = Vector3(16, 0.6, 16)
+
+[sub_resource type="BoxShape3D" id="TownGroundShape"]
+size = Vector3(16, 0.6, 16)
+
+[sub_resource type="CylinderMesh" id="TownCoreMesh"]
+top_radius = 1.2
+bottom_radius = 1.2
+height = 2.2
+
+[sub_resource type="CylinderShape3D" id="ShopTriggerShape"]
+radius = 2.2
+height = 2.0
+
+[sub_resource type="StandardMaterial3D" id="TownMat"]
+albedo_color = Color(0.35, 0.55, 0.35, 1)
+
+[node name="TownHub" type="Node3D"]
+
+[node name="TownGround" type="StaticBody3D" parent="."]
+position = Vector3(0, -0.3, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TownGround"]
+shape = SubResource("TownGroundShape")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TownGround"]
+mesh = SubResource("TownGroundMesh")
+material_override = SubResource("TownMat")
+
+[node name="TownCore" type="Node3D" parent="."]
+position = Vector3(0, 0.8, -3)
+script = ExtResource("1_town_core_script")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TownCore"]
+mesh = SubResource("TownCoreMesh")
+
+[node name="ShopTrigger" type="Area3D" parent="."]
+position = Vector3(4.5, 0.5, 1)
+script = ExtResource("2_shop_trigger_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ShopTrigger"]
+shape = SubResource("ShopTriggerShape")
+
+[node name="Prompt" type="Label3D" parent="ShopTrigger"]
+position = Vector3(0, 1.6, 0)
+text = "Press E to open shop"

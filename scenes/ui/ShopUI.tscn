@@ -1,0 +1,37 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/ShopUI.gd" id="1_shop_script"]
+
+[node name="ShopUI" type="Control"]
+offset_right = 360.0
+offset_bottom = 380.0
+script = ExtResource("1_shop_script")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Margin" type="MarginContainer" parent="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox" type="VBoxContainer" parent="Panel/Margin"]
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Panel/Margin/VBox"]
+text = "Town Shop"
+
+[node name="Items" type="VBoxContainer" parent="Panel/Margin/VBox"]
+size_flags_vertical = 3
+
+[node name="Message" type="Label" parent="Panel/Margin/VBox"]
+text = ""
+
+[node name="Close" type="Button" parent="Panel/Margin/VBox"]
+text = "Close"
