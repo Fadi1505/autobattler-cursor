@@ -35,6 +35,7 @@ func upgrade_trait(stat_name: String) -> bool:
 		return false
 	trait_levels[stat_name] = int(trait_levels.get(stat_name, 0)) + 1
 	ProfileData.meta_traits[stat_name] = trait_levels[stat_name]
+	SaveSystem.save_profile()
 	return true
 
 func set_trait_levels(levels: Dictionary) -> void:

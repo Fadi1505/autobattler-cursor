@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/GameWorld.gd" id="1_gameworld_script"]
 [ext_resource type="PackedScene" path="res://scenes/world/TownHub.tscn" id="2_town_hub"]
 [ext_resource type="PackedScene" path="res://scenes/world/LaneMap.tscn" id="3_lane_map"]
 [ext_resource type="PackedScene" path="res://scenes/player/Hero.tscn" id="4_hero"]
 [ext_resource type="PackedScene" path="res://scenes/ui/WorldUI.tscn" id="5_world_ui"]
+[ext_resource type="Script" path="res://scripts/world/TowerPlacement.gd" id="6_tower_placement"]
 
 [sub_resource type="Environment" id="DefaultEnv"]
 background_mode = 1
@@ -55,5 +56,8 @@ environment = SubResource("DefaultEnv")
 [node name="WaveStartTimer" type="Timer" parent="."]
 wait_time = 3.5
 one_shot = true
+
+[node name="TowerPlacement" type="Node3D" parent="."]
+script = ExtResource("6_tower_placement")
 
 [node name="WorldUI" parent="." instance=ExtResource("5_world_ui")]

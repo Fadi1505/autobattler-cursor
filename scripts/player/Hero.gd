@@ -13,6 +13,11 @@ const MAGIC_BOLT_SCENE: PackedScene = preload("res://scenes/player/MagicBolt.tsc
 @export var camera_pitch_degrees := -16.0
 @export var camera_distance := 6.5
 
+var nova_shield_active := false
+var nova_shield_amount := 0.0
+var nova_shield_timer := 0.0
+const NOVA_SHIELD_DURATION := 5.0
+
 var target_enemy: Node3D
 var attack_timer := 0.0
 var alive := true
@@ -45,6 +50,11 @@ func _physics_process(delta: float) -> void:
 	if not alive:
 		return
 	attack_timer = maxf(0.0, attack_timer - delta)
+	if nova_shield_active:
+		nova_shield_timer -= delta
+		if nova_shield_timer <= 0.0:
+			nova_shield_active = false
+			nova_shield_amount = 0.0
 
 	var move_input := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	var camera_basis := camera.global_transform.basis
@@ -161,10 +171,71 @@ func _on_ability_cast(ability_id: String, target: Node3D) -> void:
 	_play_anim("cast")
 	if ability_system == null:
 		return
-	var damage: float = ability_system.get_damage_for(ability_id)
-	_spawn_ability_projectile(ability_id, damage, target)
+	var dmg: float = ability_system.get_damage_for(ability_id)
+	match ability_id:
+		"arc_bolt":
+			_spawn_ability_projectile(ability_id, dmg, target)
+		"flame_wave":
+			_cast_flame_wave(dmg)
+		"chain_blast":
+			_cast_chain_blast(dmg, target)
+		"nova_guard":
+			_cast_nova_guard(dmg)
+
+func _cast_flame_wave(dmg: float) -> void:
+	var forward := -global_transform.basis.z.normalized()
+	var origin := global_position + Vector3(0, 0.8, 0)
+	var cone_angle := deg_to_rad(45.0)
+	var cone_range := 7.0
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		if not is_instance_valid(enemy):
+			continue
+		var to_enemy := (enemy.global_position - origin)
+		to_enemy.y = 0.0
+		if to_enemy.length() > cone_range:
+			continue
+		var angle := forward.angle_to(to_enemy.normalized())
+		if angle <= cone_angle:
+			if enemy.has_method("receive_damage"):
+				enemy.receive_damage(dmg)
+
+func _cast_chain_blast(dmg: float, target: Node3D) -> void:
+	var bolt: Area3D = MAGIC_BOLT_SCENE.instantiate() as Area3D
+	if bolt == null:
+		return
+	var world: Node = get_tree().current_scene
+	if world == null:
+		world = get_parent()
+	world.add_child(bolt)
+	bolt.global_position = global_position + Vector3(0, 1.0, 0) + (-global_transform.basis.z * 1.4)
+	var dir: Vector3
+	if target != null and is_instance_valid(target):
+		dir = (target.global_position + Vector3(0, 0.5, 0) - bolt.global_position).normalized()
+	else:
+		dir = -global_transform.basis.z
+	bolt.direction = dir
+	bolt.rotation = Vector3.ZERO
+	bolt.look_at(bolt.global_position + dir, Vector3.UP)
+	bolt.caster = self
+	bolt.damage = dmg
+	bolt.speed = 22.0
+	bolt.max_distance = 18.0
+	bolt.chain_bounces = 4
+
+func _cast_nova_guard(dmg: float) -> void:
+	nova_shield_active = true
+	nova_shield_amount = dmg * 2.0
+	nova_shield_timer = NOVA_SHIELD_DURATION
 
 func receive_damage(amount: float) -> void:
+	if nova_shield_active:
+		var absorbed := minf(amount, nova_shield_amount)
+		nova_shield_amount -= absorbed
+		amount -= absorbed
+		if nova_shield_amount <= 0.0:
+			nova_shield_active = false
+		if amount <= 0.0:
+			return
 	GameState.apply_damage(amount)
 
 func is_alive() -> bool:

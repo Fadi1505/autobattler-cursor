@@ -107,10 +107,22 @@ func add_item(item_data: Dictionary) -> void:
 	inventory.append(item_data)
 	inventory_changed.emit(inventory.duplicate(true))
 
+func unequip_slot(slot: String) -> void:
+	if not equipment.has(slot):
+		return
+	var old_item: Dictionary = equipment[slot]
+	if old_item.is_empty():
+		return
+	var old_stats: Dictionary = old_item["stats"] if old_item.has("stats") else {}
+	for stat_key: String in old_stats.keys():
+		hero_stats[stat_key] = float(hero_stats.get(stat_key, 0.0)) - float(old_stats[stat_key])
+	equipment[slot] = {}
+
 func equip_item(item_data: Dictionary) -> void:
 	var slot: String = str(item_data.get("slot", ""))
 	if slot == "":
 		return
+	unequip_slot(slot)
 	equipment[slot] = item_data
 	var stats: Dictionary = item_data["stats"] if item_data.has("stats") else {}
 	for stat_key: String in stats.keys():

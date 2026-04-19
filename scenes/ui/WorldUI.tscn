@@ -1,8 +1,11 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/WorldUI.gd" id="1_world_ui_script"]
 [ext_resource type="PackedScene" path="res://scenes/ui/ShopUI.tscn" id="2_shop_ui"]
 [ext_resource type="PackedScene" path="res://scenes/ui/InventoryUI.tscn" id="3_inventory_ui"]
+[ext_resource type="PackedScene" path="res://scenes/ui/MetaUpgradeUI.tscn" id="4_meta_ui"]
+[ext_resource type="PackedScene" path="res://scenes/ui/SettingsUI.tscn" id="5_settings_ui"]
+[ext_resource type="PackedScene" path="res://scenes/ui/TowerBuildUI.tscn" id="6_tower_build_ui"]
 
 [sub_resource type="StyleBoxFlat" id="PanelStyle"]
 bg_color = Color(0.12, 0.12, 0.14, 0.85)
@@ -91,7 +94,7 @@ theme_override_constants/separation = 8
 
 [node name="Wave" type="Label" parent="Margin/HUD/Panel/PanelMargin/VBox/WaveRow"]
 layout_mode = 2
-text = "Wave 0"
+text = "Waiting..."
 
 [node name="ControlsRow" type="HBoxContainer" parent="Margin/HUD/Panel/PanelMargin/VBox"]
 layout_mode = 2
@@ -109,6 +112,22 @@ text = "Inventory (I)"
 layout_mode = 2
 text = "Controls"
 
+[node name="Upgrades" type="Button" parent="Margin/HUD/Panel/PanelMargin/VBox/ControlsRow"]
+layout_mode = 2
+text = "Upgrades"
+
+[node name="Settings" type="Button" parent="Margin/HUD/Panel/PanelMargin/VBox/ControlsRow"]
+layout_mode = 2
+text = "Settings"
+
+[node name="BossBar" type="HBoxContainer" parent="Margin/HUD/Panel/PanelMargin/VBox"]
+visible = false
+layout_mode = 2
+
+[node name="BossHP" type="Label" parent="Margin/HUD/Panel/PanelMargin/VBox/BossBar"]
+layout_mode = 2
+text = "BOSS: 100%"
+
 [node name="Status" type="Label" parent="Margin/HUD/Panel/PanelMargin/VBox"]
 layout_mode = 2
 text = "WASD move · LMB attack · Q skill · Tab lock · E shop · I inv"
@@ -124,6 +143,12 @@ offset_left = 400.0
 offset_top = 90.0
 offset_right = 800.0
 offset_bottom = 510.0
+
+[node name="MetaUpgradeUI" parent="." instance=ExtResource("4_meta_ui")]
+
+[node name="SettingsUI" parent="." instance=ExtResource("5_settings_ui")]
+
+[node name="TowerBuildUI" parent="." instance=ExtResource("6_tower_build_ui")]
 
 [node name="ControlsPanel" type="Panel" parent="."]
 visible = false
@@ -163,12 +188,47 @@ Skills: Q R F G (unlock with level)
 Lock target: Tab
 Interact: E
 Inventory: I
+Build Tower: T
 Pause: Esc"
 autowrap_mode = 3
 
 [node name="Close" type="Button" parent="ControlsPanel/Margin/VBox"]
 layout_mode = 2
 text = "Close"
+
+[node name="PausePanel" type="Panel" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -90.0
+offset_right = 160.0
+offset_bottom = 90.0
+
+[node name="Margin" type="MarginContainer" parent="PausePanel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 24.0
+theme_override_constants/margin_top = 24.0
+theme_override_constants/margin_right = 24.0
+theme_override_constants/margin_bottom = 24.0
+
+[node name="VBox" type="VBoxContainer" parent="PausePanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="PausePanel/Margin/VBox"]
+layout_mode = 2
+text = "Paused"
+horizontal_alignment = 1
+
+[node name="Resume" type="Button" parent="PausePanel/Margin/VBox"]
+layout_mode = 2
+text = "Resume"
 
 [node name="RunOverPanel" type="Panel" parent="."]
 visible = false

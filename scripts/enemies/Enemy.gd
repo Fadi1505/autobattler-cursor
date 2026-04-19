@@ -16,6 +16,14 @@ var town_target: Node3D
 var hero_target: Node3D
 var attack_timer := 0.0
 var _anim_player: AnimationPlayer
+var ranged_attack_range := 10.0
+var preferred_distance := 7.0
+var support_aura_range := 6.0
+var support_aura_timer := 0.0
+const SUPPORT_AURA_INTERVAL := 3.0
+const SUPPORT_HEAL_AMOUNT := 0.08
+const SUPPORT_SPEED_BUFF := 1.25
+const ENEMY_PROJECTILE_SCENE: PackedScene = preload("res://scenes/enemies/EnemyProjectile.tscn")
 
 func configure(type_name: String, wave_number: int, town_node: Node3D, hero_node: Node3D) -> void:
 	enemy_type = type_name
@@ -35,6 +43,17 @@ func configure(type_name: String, wave_number: int, town_node: Node3D, hero_node
 
 func _physics_process(delta: float) -> void:
 	attack_timer = maxf(0.0, attack_timer - delta)
+
+	if enemy_type == "support":
+		support_aura_timer -= delta
+		if support_aura_timer <= 0.0:
+			support_aura_timer = SUPPORT_AURA_INTERVAL
+			_apply_support_aura()
+
+	if enemy_type == "ranged":
+		_process_ranged(delta)
+		return
+
 	var target := _pick_target()
 	if target == null:
 		velocity = Vector3.ZERO
@@ -54,6 +73,59 @@ func _physics_process(delta: float) -> void:
 		velocity = offset.normalized() * move_speed
 		_play_anim("walk")
 		move_and_slide()
+
+func _process_ranged(delta: float) -> void:
+	var target := _pick_target()
+	if target == null:
+		velocity = Vector3.ZERO
+		_play_anim("idle")
+		move_and_slide()
+		return
+	var offset := target.global_position - global_position
+	offset.y = 0.0
+	var distance := offset.length()
+
+	if distance <= ranged_attack_range:
+		if distance < preferred_distance * 0.6:
+			velocity = -offset.normalized() * move_speed
+			_play_anim("walk")
+		else:
+			velocity = Vector3.ZERO
+			_play_anim("idle")
+		if attack_timer <= 0.0:
+			attack_timer = attack_cooldown
+			_fire_projectile(target)
+	else:
+		velocity = offset.normalized() * move_speed
+		_play_anim("walk")
+	move_and_slide()
+
+func _fire_projectile(target: Node3D) -> void:
+	_play_anim("attack")
+	var proj: Area3D = ENEMY_PROJECTILE_SCENE.instantiate() as Area3D
+	if proj == null:
+		return
+	var world: Node = get_tree().current_scene
+	if world == null:
+		world = get_parent()
+	world.add_child(proj)
+	proj.global_position = global_position + Vector3(0, 0.8, 0)
+	var dir := (target.global_position + Vector3(0, 0.5, 0) - proj.global_position).normalized()
+	proj.direction = dir
+	proj.look_at(proj.global_position + dir, Vector3.UP)
+	proj.source_enemy = self
+	proj.damage = damage
+	proj.speed = 12.0
+
+func _apply_support_aura() -> void:
+	for ally in get_tree().get_nodes_in_group("enemies"):
+		if ally == self or not is_instance_valid(ally):
+			continue
+		if not ally.has_method("receive_damage"):
+			continue
+		var dist := global_position.distance_to(ally.global_position)
+		if dist <= support_aura_range:
+			ally.health = minf(ally.max_health, ally.health + ally.max_health * SUPPORT_HEAL_AMOUNT)
 
 func receive_damage(amount: float) -> void:
 	health -= amount
