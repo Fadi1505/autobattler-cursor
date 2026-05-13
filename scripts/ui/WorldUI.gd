@@ -25,6 +25,15 @@ extends CanvasLayer
 @onready var settings_ui: Control = $SettingsUI
 @onready var upgrades_button: Button = $Margin/HUD/Panel/PanelMargin/VBox/ControlsRow/Upgrades
 @onready var settings_button: Button = $Margin/HUD/Panel/PanelMargin/VBox/ControlsRow/Settings
+@onready var ability_unlock_popup: Panel = $AbilityUnlockPopup
+@onready var ability_unlock_name: Label = $AbilityUnlockPopup/Margin/VBox/AbilityName
+
+const ABILITY_DISPLAY_NAMES := {
+	"arc_bolt": "Arc Bolt (Q)",
+	"flame_wave": "Flame Wave (R)",
+	"chain_blast": "Chain Blast (F)",
+	"nova_guard": "Nova Guard (G)"
+}
 
 func _ready() -> void:
 	start_wave_button.pressed.connect(_on_start_wave)
@@ -154,3 +163,20 @@ func show_boss_bar(visible_flag: bool) -> void:
 func update_boss_bar(health_pct: float) -> void:
 	if boss_bar_label != null:
 		boss_bar_label.text = "BOSS: %d%%" % int(health_pct * 100.0)
+
+func show_ability_unlocked(ability_id: String) -> void:
+	if ability_unlock_popup == null or ability_unlock_name == null:
+		return
+	ability_unlock_name.text = str(ABILITY_DISPLAY_NAMES.get(ability_id, ability_id))
+	ability_unlock_popup.visible = true
+	ability_unlock_popup.modulate = Color(1, 1, 1, 0)
+	var tween := create_tween()
+	tween.set_parallel(false)
+	tween.tween_property(ability_unlock_popup, "modulate:a", 1.0, 0.25)
+	tween.tween_interval(2.0)
+	tween.tween_property(ability_unlock_popup, "modulate:a", 0.0, 0.5)
+	tween.tween_callback(func() -> void:
+		if ability_unlock_popup != null:
+			ability_unlock_popup.visible = false
+	)
+	set_status_text("Unlocked: %s" % ability_unlock_name.text)

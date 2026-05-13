@@ -245,9 +245,11 @@ func _on_stats_changed(stats: Dictionary) -> void:
 	if float(stats["health"]) <= 0.0:
 		alive = false
 
-func _on_ability_unlocked(_ability_id: String) -> void:
-	# Hook for playing VFX/audio popup.
-	pass
+func _on_ability_unlocked(ability_id: String) -> void:
+	_play_anim("cast")
+	for ui in get_tree().get_nodes_in_group("world_ui"):
+		if ui.has_method("show_ability_unlocked"):
+			ui.show_ability_unlocked(ability_id)
 
 func _update_animation() -> void:
 	if _anim_player == null:

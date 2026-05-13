@@ -126,8 +126,19 @@ func _check_charge_collision() -> void:
 
 func _do_stomp() -> void:
 	_play_anim("attack")
+	# Shockwave: knock allies back so boss has breathing room and the AoE reads visually.
 	for body in get_tree().get_nodes_in_group("enemies"):
-		pass
+		if body == self or not is_instance_valid(body):
+			continue
+		if not (body is CharacterBody3D):
+			continue
+		var to_body: Vector3 = body.global_position - global_position
+		to_body.y = 0.0
+		var dist_to_ally := to_body.length()
+		if dist_to_ally <= STOMP_RANGE and dist_to_ally > 0.001:
+			var falloff: float = 1.0 - (dist_to_ally / STOMP_RANGE)
+			(body as CharacterBody3D).velocity += to_body.normalized() * 8.0 * falloff
+			(body as CharacterBody3D).velocity.y = 4.0 * falloff
 	if hero_target != null and is_instance_valid(hero_target):
 		if hero_target.has_method("is_alive") and hero_target.is_alive():
 			var dist := global_position.distance_to(hero_target.global_position)
