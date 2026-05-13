@@ -1,5 +1,7 @@
 # Lane Defense 3D (Hybrid Prototype)
 
+Godot 4.5 project only — `scenes/`, `scripts/`, `assets/`, and `docs/`. Older web prototypes were removed from this repo.
+
 A 3D lane-defense game built in Godot 4.5 with hybrid controls:
 - Direct third-person movement and aiming
 - Target-based abilities for reliable combat
