@@ -54,6 +54,10 @@ A 3D lane-defense game built in Godot 4.5 with hybrid controls:
 - `MetaProgression` — permanent trait levels and starting bonuses
 - `BalanceTables` — enemy stats, weights, budgets, shop catalog
 
+## Related
+
+The Phaser / TypeScript **autobattler** prototype is maintained in its own repository: [Fadi1505/autobattler](https://github.com/Fadi1505/autobattler).
+
 ## QA and Export
 
 - QA checklist: `docs/QA_CHECKLIST.md`
